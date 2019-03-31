@@ -1,5 +1,8 @@
 <?php
 
+$config['is_system_on'] = 'y';
+$config['multiple_sites_enabled'] = 'n';
+$config['show_ee_news'] = 'n';
 // ExpressionEngine Config Items
 // Find more configs and overrides at
 // https://docs.expressionengine.com/latest/general/system_configuration_overrides.html
