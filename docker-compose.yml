@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  utility:
+    image: buzzingpixel/utility:1.1.0
+    container_name: utility-executive-dev
+    environment:
+      HOSTNAME: utility-executive-dev
+    volumes:
+      - .:/app
+      - ../executive-ee:/executive-ee
+      - db-volume:/db-volume
+      - vendor-volume:/vendor-volume
+    command: bash -c "chmod +x /app/scripts/devUtilityScript.sh && /app/scripts/devUtilityScript.sh"
+    networks:
+      common-executive-dev-network:
+  web:
+    image: buzzingpixel/nginx:1.0.2
+    container_name: nginx-executive-dev
+    environment:
+      HOSTNAME: nginx-executive-dev
+    ports:
+      - "36680:80"
+    volumes:
+      - ./serverConfig/nginx/site.conf:/etc/nginx/conf.d/site.conf:delegated
+      - .:/app:delegated
+      - .:/app-www:delegated
+      - ../executive-ee:/executive-ee:delegated
+      - vendor-volume:/app-www/vendor:delegated
+    networks:
+      common-executive-dev-network:
+        aliases:
+          - executive-dev.test
+  php:
+    image: buzzingpixel/php7.2:1.0.6
+    container_name: php-executive-dev
+    environment:
+      HOSTNAME: php-executive-dev
+      COMPOSER_HOME: /composer-home-volume
+    volumes:
+      - ./serverConfig/php/php-custom-config.ini:/usr/local/etc/php/conf.d/php-custom-config.ini:delegated
+      - ./serverConfig/php/php-config-dev.ini:/usr/local/etc/php/conf.d/php-env-config.ini:delegated
+      - ./serverConfig/php/fpm-www.conf:/usr/local/etc/php-fpm.d/www.conf:delegated
+      - .:/app:delegated
+      - .:/app-www:delegated
+      - ../executive-ee:/executive-ee:delegated
+      - composer-home-volume:/composer-home-volume
+      - vendor-volume:/app-www/vendor:delegated
+    networks:
+      common-executive-dev-network:
+  db:
+    image: buzzingpixel/mariadb:2.0.1
+    container_name: db-executive-dev
+    restart: always
+    environment:
+      HOSTNAME: db-executive-dev
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: site
+      MYSQL_DATABASE: site
+      MYSQL_PASSWORD: secret
+    user: "1000:50"
+    volumes:
+      - db-volume:/var/lib/mysql
+    ports:
+      - "30790:3306"
+    networks:
+      common-executive-dev-network:
+
+volumes:
+  composer-home-volume:
+  db-volume:
+  vendor-volume:
+
+networks:
+  common-executive-dev-network:

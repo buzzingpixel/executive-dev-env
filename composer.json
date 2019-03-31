@@ -1,0 +1,30 @@
+{
+    "name": "buzzingpixel/executive-dev-env",
+    "description": "executive-dev-env",
+    "type": "project",
+    "require": {
+        "php": ">=7.1",
+        "buzzingpixel/executive-ee": "^3.0-rc.1"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "symfony/dotenv": "^4.2"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../executive-ee",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "config": {
+        "bin-compat": "full",
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "provisionEEVersionTag": "5.2.2"
+    }
+}
