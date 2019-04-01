@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * This is used to get Executive in a place where PHPStorm can be aware of it
+ */
+
+// Set up composer
+$sep = DIRECTORY_SEPARATOR;
+$basePath = __DIR__;
+$vendorAutoload = $basePath . $sep . 'vendor' . $sep . 'autoload.php';
+if (file_exists($vendorAutoload)) {
+    require_once $vendorAutoload;
+}
+
+use Symfony\Component\Filesystem\Filesystem;
+
+$isWin = mb_strpos(PHP_OS, 'WIN') === 0;
+
+function processPathForPlatform(string $path): string
+{
+    $newPath = '';
+
+    foreach (explode('/', $path) as $namePart) {
+        if (! $namePart) {
+            continue;
+        }
+
+        if (! $newPath) {
+            $newPath = $namePart;
+            continue;
+        }
+
+        $newPath .= DIRECTORY_SEPARATOR . $namePart;
+    }
+
+    return DIRECTORY_SEPARATOR . ltrim($newPath, '/\\');
+}
+
+$fileSystem = new Filesystem();
+
+$path = processPathForPlatform(__DIR__ . '/libraries');
+$symLinkFrom = dirname(__DIR__) . '/executive-ee';
+$symLinkTo = __DIR__ . '/libraries/executive-ee';
+
+exec(
+    $isWin ?
+        "rmdir {$symLinkTo} /s /q" :
+        "rm -rf {$symLinkTo}"
+);
+
+symlink($symLinkFrom, $symLinkTo);

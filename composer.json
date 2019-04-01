@@ -4,7 +4,7 @@
     "type": "project",
     "require": {
         "php": ">=7.1",
-        "buzzingpixel/executive-ee": "^3.0-rc.1"
+        "buzzingpixel/executive-ee": "^3.0.0-rc.1"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
@@ -20,6 +20,11 @@
             }
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "BuzzingPixel\\ExecutiveEnv\\": "src"
+        }
+    },
     "config": {
         "bin-compat": "full",
         "optimize-autoloader": true,

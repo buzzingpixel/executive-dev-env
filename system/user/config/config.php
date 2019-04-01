@@ -1,5 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
+use BuzzingPixel\ExecutiveEnv\TestController;
+
+$config['customRoutes'] = [
+    '/test' => TestController::class,
+    // '/test' => [
+    //     'class' => TestController::class,
+    //     'method' => '__invoke',
+    // ],
+];
+
 $config['is_system_on'] = 'y';
 $config['multiple_sites_enabled'] = 'n';
 $config['show_ee_news'] = 'n';
